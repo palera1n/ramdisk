@@ -51,7 +51,22 @@ fi
 check=$("$oscheck"/irecovery -q | grep CPID | sed 's/CPID: //')
 replace=$("$oscheck"/irecovery -q | grep MODEL | sed 's/MODEL: //')
 deviceid=$("$oscheck"/irecovery -q | grep PRODUCT | sed 's/PRODUCT: //')
-ipswurl=$(curl -sL "https://api.ipsw.me/v4/device/$deviceid?type=ipsw" | "$oscheck"/jq '.firmwares | .[] | select(.version=="'$1'")' | "$oscheck"/jq -s '.[0] | .url' --raw-output)
+if [[ "$deviceid" == *"iPad"* ]]; then
+    device_os=iPadOS
+    device=iPad
+elif [[ "$deviceid" == *"iPod"* ]]; then
+    device_os=iOS
+    device=iPod
+else
+    device_os=iOS
+    device=iPhone
+fi
+
+buildid=$(curl -sL https://api.ipsw.me/v4/ipsw/$version | "$dir"/jq '[.[] | select(.identifier | startswith("'$device'")) | .buildid][0]' --raw-output)
+if [ "$buildid" == "19B75" ]; then
+    buildid=19B74
+fi
+ipswurl=$(curl -sL https://api.appledb.dev/ios/$device_os\;$buildid.json | "$dir"/jq -r .devices\[\"$deviceid\"\].ipsw)
 
 if [ -e work ]; then
     rm -rf work
