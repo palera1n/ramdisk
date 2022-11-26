@@ -153,8 +153,9 @@ cd ..
 
 "$dir"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$dir"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
-python3 kerneldiff.py work/kcache.raw work/kcache.patched work/kc.bpatch
-"$dir"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o sshramdisk/kernelcache.img4 -M work/IM4M -T rkrn -P work/kc.bpatch `if [ "$oscheck" = 'Linux' ]; then echo "-J"; fi`
+python3 -m pyimg4 im4p create -i work/kcache.patched -o sshramdisk/kernelcache.im4p -f rkrn `if [ "$oscheck" = 'Linux' ]; then echo "--lzss"; fi`
+python3 -m pyimg4 img4 create -p sshramdisk/kernelcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
+rm -rf sshramdisk/kernelcache.im4p
 "$dir"/img4 -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o sshramdisk/devicetree.img4 -M work/IM4M -T rdtr
 
 if [ "$oscheck" = 'Darwin' ]; then
