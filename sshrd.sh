@@ -4,11 +4,7 @@ set -e
 
 oscheck=$(uname)
 arch=$(uname -m)
-if [ "$oscheck" = "Linux" ]; then
-    dir="$(pwd)/Linux/$arch"
-else
-    dir="$(pwd)/Darwin"
-fi
+dir="$(pwd)/$oscheck"
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
@@ -28,13 +24,10 @@ fi
 # git submodule update --init --recursive
 
 if [ ! -e "$dir"/gaster ]; then
-    if [ "$oscheck" = 'Linux' ]; then
-        extrapath="-${arch}"
-    fi
-    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck$extrapath".zip
-    unzip gaster-"$oscheck$extrapath".zip
+    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck".zip
+    unzip gaster-"$oscheck".zip
     mv gaster "$dir"/
-    rm -rf gaster gaster-"$oscheck$extrapath".zip
+    rm -rf gaster gaster-"$oscheck".zip
 fi
 
 chmod +x "$dir"/*
