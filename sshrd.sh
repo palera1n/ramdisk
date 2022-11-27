@@ -4,7 +4,11 @@ set -e
 
 oscheck=$(uname)
 arch=$(uname -m)
-dir="$(pwd)/$oscheck"
+if [ "$oscheck" = "Linux" ]; then
+    dir="$(pwd)/Linux/$arch"
+else
+    dir="$(pwd)/Darwin"
+fi
 
 ERR_HANDLER () {
     [ $? -eq 0 ] && exit
