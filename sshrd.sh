@@ -153,7 +153,7 @@ python3 -m pyimg4 img4 create -p work/iBSS.patched.im4p -m work/IM4M -o sshramdi
 python3 -m pyimg4 im4p create -i work/iBEC.patched -o work/iBEC.patched.im4p -f ibec
 python3 -m pyimg4 img4 create -p work/iBEC.patched.im4p -m work/IM4M -o sshramdisk/iBEC.img4
 
-python3 -m pyimg4 img4 extract -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
+python3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$dir"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 python3 -m pyimg4 im4p create -i work/kcache.patched -o work/kernelcache.im4p -f rkrn `if [ "$oscheck" = 'Linux' ]; then echo "--lzss"; fi`
 python3 -m pyimg4 img4 create -p work/kernelcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
