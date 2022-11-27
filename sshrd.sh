@@ -147,17 +147,17 @@ cd ..
 "$dir"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBSS[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBSS.dec
 "$dir"/gaster decrypt work/"$(awk "/""${replace}""/{x=1}x&&/iBEC[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]dfu[/]//')" work/iBEC.dec
 "$dir"/iBoot64Patcher work/iBSS.dec work/iBSS.patched
-pyimg4 im4p create -i work/iBSS.patched -o work/iBSS.patched.im4p -f ibss
+python3 -m pyimg4 im4p create -i work/iBSS.patched -o work/iBSS.patched.im4p -f ibss
 python3 -m pyimg4 img4 create -p work/iBSS.patched.im4p -m work/IM4M -o sshramdisk/iBSS.img4
 "$dir"/iBoot64Patcher work/iBEC.dec work/iBEC.patched -b "rd=md0 debug=0x2014e wdt=-1 `if [ -z "$2" ]; then :; else echo "$2=$3"; fi` `if [ "$check" = '0x8960' ] || [ "$check" = '0x7000' ] || [ "$check" = '0x7001' ]; then echo "-restore"; fi`" -n
-pyimg4 im4p create -i work/iBEC.patched -o work/iBEC.patched.im4p -f ibec
+python3 -m pyimg4 im4p create -i work/iBEC.patched -o work/iBEC.patched.im4p -f ibec
 python3 -m pyimg4 img4 create -p work/iBEC.patched.im4p -m work/IM4M -o sshramdisk/iBEC.img4
 
 python3 -m pyimg4 img4 extract -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -p work/kcache.raw
 "$dir"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 python3 -m pyimg4 im4p create -i work/kcache.patched -o work/kernelcache.im4p -f rkrn `if [ "$oscheck" = 'Linux' ]; then echo "--lzss"; fi`
 python3 -m pyimg4 img4 create -p work/kernelcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
-pyimg4 im4p create -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/devicetree.im4p -f rdtr
+python3 -m pyimg4 im4p create -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/devicetree.im4p -f rdtr
 python3 -m pyimg4 img4 create -p work/devicetree.im4p -m work/IM4M -o sshramdisk/devicetree.img4
 if [ "$oscheck" = 'Darwin' ]; then
     python3 -m pyimg4 im4p create -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o work/trustcache.im4p
