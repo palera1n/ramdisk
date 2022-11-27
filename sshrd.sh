@@ -210,6 +210,7 @@ else
 fi
 python3 -m pyimg4 im4p create -i work/ramdisk.dmg -o work/ramdisk.im4p -f rdsk
 python3 -m pyimg4 img4 create -p work/ramdisk.im4p -m work/IM4M -o sshramdisk/ramdisk.img4
-"$dir"/img4 -i other/bootlogo.im4p -o sshramdisk/bootlogo.img4 -M work/IM4M -A -T rlgo
+python3 -m pyimg4 im4p create -i other/bootlogo.im4p -o work/bootlogo.im4p -f rlgo
+python3 -m pyimg4 img4 create -p work/bootlogo.im4p -m work/IM4M -o sshramdisk/bootlogo.img4
 
 rm -rf work
