@@ -28,10 +28,10 @@ fi
 # git submodule update --init --recursive
 
 if [ ! -e "$dir"/gaster ]; then
-    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck".zip
-    unzip gaster-"$oscheck".zip
+    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck"-"$arch".zip
+    unzip gaster-"$oscheck"-"$arch".zip
     mv gaster "$dir"/
-    rm -rf gaster gaster-"$oscheck".zip
+    rm -rf gaster gaster-"$oscheck"-"$arch".zip
 fi
 
 chmod +x "$dir"/*
