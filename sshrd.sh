@@ -28,7 +28,12 @@ fi
 # git submodule update --init --recursive
 
 if [ ! -e "$dir"/gaster ]; then
-    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$oscheck"-"$arch".zip
+    if [ "$oscheck" = "Linux" ]; then
+        filename=Linux-"$arch"
+    else
+        filename=Darwin
+    fi
+    curl -sLO https://nightly.link/palera1n/gaster/workflows/makefile/main/gaster-"$filename".zip
     unzip gaster-"$oscheck"-"$arch".zip
     mv gaster "$dir"/
     rm -rf gaster gaster-"$oscheck"-"$arch".zip
