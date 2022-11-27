@@ -160,11 +160,11 @@ python3 -m pyimg4 img4 create -p work/kernelcache.im4p -m work/IM4M -o sshramdis
 python3 -m pyimg4 im4p create -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/devicetree.im4p -f rdtr
 python3 -m pyimg4 img4 create -p work/devicetree.im4p -m work/IM4M -o sshramdisk/devicetree.img4
 if [ "$oscheck" = 'Darwin' ]; then
-    python3 -m pyimg4 im4p create -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o work/trustcache.im4p
+    python3 -m pyimg4 im4p create -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o work/trustcache.im4p -T rtsc
     python3 -m pyimg4 img4 create -p work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
     python3 -m pyimg4 im4p extract -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
-    python3 -m pyimg4 im4p create -i work/"$("$dir"/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o work/trustcache.im4p
+    python3 -m pyimg4 im4p create -i work/"$("$dir"/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o work/trustcache.im4p -T rtsc
     python3 -m pyimg4 img4 create -p work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
     python3 -m pyimg4 im4p extract -i work/"$("$dir"/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
