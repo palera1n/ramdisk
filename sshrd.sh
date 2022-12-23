@@ -5,6 +5,10 @@ set -e
 oscheck=$(uname)
 
 ERR_HANDLER () {
+    if [ $? -eq 124 ]; then
+       echo "[-] Pwning the device took too long, something's not right."
+       exit
+    fi
     [ $? -eq 0 ] && exit
     echo "[-] An error occurred"
     rm -rf work
@@ -66,7 +70,7 @@ if [ "$1" = 'boot' ]; then
         exit
     fi
 
-    "$oscheck"/gaster pwn
+    timeout 30 "$oscheck"/gaster pwn
     sleep 1
     "$oscheck"/gaster reset
     sleep 1
@@ -131,7 +135,7 @@ else
     ipswurl=$(curl -sL https://api.appledb.dev/ios/$device_os\;$buildid.json | "$oscheck"/jq -r .devices\[\"$deviceid\"\].ipsw)
 fi
 
-"$oscheck"/gaster pwn
+timeout 30 "$oscheck"/gaster pwn
 "$oscheck"/img4tool -e -s shsh/"${check}".shsh -m work/IM4M
 
 cd work
