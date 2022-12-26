@@ -169,7 +169,7 @@ python3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelca
 python3 -m pyimg4 im4p create -i work/kcache.patched -o work/kcache.im4p -f rkrn --lzss
 python3 -m pyimg4 img4 create -i work/kcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
 
-pytohn3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/dtree.raw --no-decompress
+python3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/dtree.raw --no-decompress
 python3 -m pyimg4 im4p create -i work/dtree.raw -o work/dtree.im4p -f rdtr
 python3 -m pyimg4 img4 create -i work/dtree.im4p -m work/IM4M -o sshramdisk/devicetree.img4
 
