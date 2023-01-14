@@ -188,7 +188,7 @@ else
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
-    hdiutil resize -size 256MB work/ramdisk.dmg
+    hdiutil resize -size 150MB work/ramdisk.dmg
     hdiutil attach -mountpoint /tmp/SSHRD work/ramdisk.dmg
 
     "$oscheck"/gtar -x --no-overwrite-dir -f other/ramdisk.tar.gz -C /tmp/SSHRD/
@@ -210,7 +210,7 @@ else
         gzip -f -k -d other/ramdisk.tar.gz
     fi
 
-    "$oscheck"/hfsplus work/ramdisk.dmg grow 300000000 > /dev/null
+    "$oscheck"/hfsplus work/ramdisk.dmg grow 150000000 > /dev/null
     "$oscheck"/hfsplus work/ramdisk.dmg untar other/ramdisk.tar > /dev/null
 
     #if [ ! "$2" = 'rootless' ]; then
