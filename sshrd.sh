@@ -167,22 +167,22 @@ python3 -m pyimg4 img4 create -p work/iBEC.im4p -m work/IM4M -o sshramdisk/iBEC.
 python3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" -o work/kcache.raw
 "$oscheck"/Kernel64Patcher work/kcache.raw work/kcache.patched -a
 python3 -m pyimg4 im4p create -i work/kcache.patched -o work/kcache.im4p -f rkrn --lzss
-python3 -m pyimg4 img4 create -i work/kcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
+python3 -m pyimg4 img4 create -p work/kcache.im4p -m work/IM4M -o sshramdisk/kernelcache.img4
 
 python3 -m pyimg4 im4p extract -i work/"$(awk "/""${replace}""/{x=1}x&&/DeviceTree[.]/{print;exit}" work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | sed 's/Firmware[/]all_flash[/]//')" -o work/dtree.raw --no-decompress
 python3 -m pyimg4 im4p create -i work/dtree.raw -o work/dtree.im4p -f rdtr
-python3 -m pyimg4 img4 create -i work/dtree.im4p -m work/IM4M -o sshramdisk/devicetree.img4
+python3 -m pyimg4 img4 create -p work/dtree.im4p -m work/IM4M -o sshramdisk/devicetree.img4
 
 if [ "$oscheck" = 'Darwin' ]; then
     python3 -m pyimg4 im4p extract -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o work/trustcache
     python3 -m pyimg4 im4p create -i work/trustcache -o work/trustcache.im4p -f rtsc
-    python3 -m pyimg4 img4 create -i work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
+    python3 -m pyimg4 img4 create -p work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
 
     python3 -m pyimg4 im4p extract -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
     python3 -m pyimg4 im4p extract -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o work/trustcache
     python3 -m pyimg4 im4p create -i work/trustcache -o work/trustcache.im4p -f rtsc
-    python3 -m pyimg4 img4 create -i work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
+    python3 -m pyimg4 img4 create -p work/trustcache.im4p -m work/IM4M -o sshramdisk/trustcache.img4
 
     python3 -m pyimg4 im4p extract -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
