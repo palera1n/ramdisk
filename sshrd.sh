@@ -19,10 +19,6 @@ if ! python3 -c 'import pkgutil; exit(not pkgutil.find_loader("pyimg4"))'; then
     python3 -m pip install pyimg4
 fi
 
-plist2json() {
-    python3 -c "import base64, json, plistlib, sys; print(json.dumps(plistlib.loads(sys.stdin.buffer.read()), default=lambda x: base64.b64encode(x).decode() if isinstance(x, bytes) else x))"
-}
-
 # git submodule update --init --recursive
 
 if [ ! -e "$oscheck"/gaster ]; then
@@ -147,7 +143,7 @@ cd work
 if [ "$oscheck" = 'Darwin' ]; then
     ../"$oscheck"/pzb -g Firmware/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache "$ipswurl"
 else
-    ../"$oscheck"/pzb -g Firmware/"$(cat BuildManifest.plist | plist2json | ../"$oscheck"/jq -r ".BuildIdentities[0].Manifest.RestoreRamDisk.Info.Path")".trustcache "$ipswurl"
+    ../"$oscheck"/pzb -g Firmware/"$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache "$ipswurl"
 fi
 
 ../"$oscheck"/pzb -g "$(awk "/""${replace}""/{x=1}x&&/kernelcache.release/{print;exit}" BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1)" "$ipswurl"
@@ -155,7 +151,7 @@ fi
 if [ "$oscheck" = 'Darwin' ]; then
     ../"$oscheck"/pzb -g "$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" "$ipswurl"
 else
-    ../"$oscheck"/pzb -g "$(cat BuildManifest.plist | plist2json | ../"$oscheck"/jq -r ".BuildIdentities[0].Manifest.RestoreRamDisk.Info.Path")" "$ipswurl"
+    ../"$oscheck"/pzb -g "$(../Linux/PlistBuddy BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" "$ipswurl"
 fi
 
 cd ..
@@ -176,8 +172,8 @@ if [ "$oscheck" = 'Darwin' ]; then
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
     "$oscheck"/img4 -i work/"$(/usr/bin/plutil -extract "BuildIdentities".0."Manifest"."RestoreRamDisk"."Info"."Path" xml1 -o - work/BuildManifest.plist | grep '<string>' |cut -d\> -f2 |cut -d\< -f1 | head -1)" -o work/ramdisk.dmg
 else
-    "$oscheck"/img4 -i work/"$(cat work/BuildManifest.plist | plist2json | "$oscheck"/jq -r ".BuildIdentities[0].Manifest.RestoreRamDisk.Info.Path")".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
-    "$oscheck"/img4 -i work/"$(cat work/BuildManifest.plist | plist2json | "$oscheck"/jq -r ".BuildIdentities[0].Manifest.RestoreRamDisk.Info.Path")" -o work/ramdisk.dmg
+    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')".trustcache -o sshramdisk/trustcache.img4 -M work/IM4M -T rtsc
+    "$oscheck"/img4 -i work/"$(Linux/PlistBuddy work/BuildManifest.plist -c "Print BuildIdentities:0:Manifest:RestoreRamDisk:Info:Path" | sed 's/"//g')" -o work/ramdisk.dmg
 fi
 
 if [ "$oscheck" = 'Darwin' ]; then
