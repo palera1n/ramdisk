@@ -27,8 +27,8 @@ Create and boot a SSH ramdisk on checkm8 devices
 2. Run `./sshrd.sh <iOS version for ramdisk>` (use sudo if on Linux), **without** the `<>`.
 3. Place your device into DFU mode
     - A11 users, go to recovery first, then DFU.
-4. Run `./sshrd.sh boot` to boot the ramdisk
-5. Run `./sshrd.sh ssh` to connect to SSH on your device
+4. Run `./sshrd.sh boot` (use sudo if on Linux) to boot the ramdisk
+5. Run `./sshrd.sh ssh` (use sudo if on Linux) to connect to SSH on your device
 6. Finally, to mount the filesystems, run `mount_filesystems`  
     - /var is mounted to /mnt2 in the ssh session.
     - /private/preboot is mounted to /mnt6.
